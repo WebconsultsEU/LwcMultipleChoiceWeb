@@ -1,0 +1,224 @@
+Helpers:
+http://samminds.com/2012/07/install-doctrine-2-for-zend-framework-2/
+
+http://www.jasongrimes.org/2012/01/using-doctrine-2-in-zend-framework-2/
+
+
+Composer installieren
+
+
+Skeleton App via Composer holen
+
+Doctrine ORM holen
+
+--- composer.json ändern in
+"require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": "2.*",
+        "doctrine/doctrine-orm-module": "dev-master"
+    }
+}
+--- 
+php composer.phar update 
+
+
+Die Datanbank konfiguration in das autoload verzeichniss schmeissen.
+---- config/autoload/doctrine.local.php
+<?php
+
+/*
+ * Datenbank Configuration für Doctrine
+ */
+
+return array(
+  'doctrine' => array(
+    'connection' => array(
+      'orm_default' => array(
+        'driverClass' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
+        'params' => array(
+          'host'     => 'localhost',
+          'port'     => '3306',
+          'user'     => 'root',
+          'password' => '',
+          'dbname'   => 'lwcmultiplechoice'
+        )
+      )
+    )
+  ),
+);
+
+
+Das laden des doctrine modules zum autoload verzeichniss hinzufügen.
+----- config/application.config
+<?php
+return array(
+    'modules' => array(
+        'Application',
+        'LwcMultipleChoice',
+        'DoctrineModule',
+        'DoctrineORMModule'
+    ),
+    
+
+    
+Weiter gehts, Modul Anlegen
+LwcMultipleChoice ...
+
+----- LwcMultipleChoice/config/module.config.php
+<?php
+/**
+ * config file für unser LwcMultipleChoice Modul 
+ */
+
+return array(
+  'router' => array(
+        'routes' => array(
+            'location' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/test[/:action][/:id]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'LwcMultipleChoice\Controller\Test',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+        ),
+    ),
+  'controllers' => array(
+    'invokables' => array(
+            'LwcMultipleChoice\Controller\Test' => 'LwcMultipleChoice\Controller\Test',
+            'LwcLocation\Controller\Cli' => 'LwcLocation\Controller\CliController',
+        ),
+  ),
+  'view_manager' => array(
+     'template_path_stack' => array(
+            'location' => __DIR__ . '/../view',
+        ),
+  ),
+  'doctrine' => array(
+    'driver' => array(
+      __NAMESPACE__ . '_driver' => array(
+        'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+        'cache' => 'array',
+        'paths' => array(__DIR__ . '/../src/' . __NAMESPACE__ . '/Entity')
+      ),
+      'orm_default' => array(
+        'drivers' => array(
+          __NAMESPACE__ . '\Entity' => __NAMESPACE__ . '_driver'
+        )
+      )
+    )
+  )
+);
+
+
+Wir erzeugen ein konsolenscript, so wie die jungs von Mayflower
+
+-------------- doctrine-php consolenskipt erzeugen
+------------ /doctrine.php
+
+ 
+use Zend\Loader\AutoloaderFactory,
+    Zend\Mvc\Service\ServiceManagerConfig,
+    Zend\ServiceManager\ServiceManager;
+ 
+ini_set('display_errors', true);
+//chdir(__DIR__);
+ 
+$previousDir = '.';
+ 
+while (!file_exists('config/application.config.php')) {
+    $dir = dirname(getcwd());
+ 
+    if ($previousDir === $dir) {
+        throw new RuntimeException(
+            'Unable to locate "config/application.config.php":'
+                . ' is doctrine.php in a subdir of your application skeleton?'
+        );
+    }
+ 
+    $previousDir = $dir;
+    chdir($dir);
+}
+require_once 'init_autoloader.php'; 
+//require_once (getenv('ZF2_PATH') ?: 'vendor/zendframework/library') . '/Zend/Loader/AutoloaderFactory.php';
+ 
+// Setup autoloader
+AutoloaderFactory::factory();
+ 
+// get application stack configuration
+$config = include 'config/application.config.php';
+
+// setup service manager
+$serviceManager = new ServiceManager(new ServiceManagerConfig());
+$serviceManager->setService('ApplicationConfig', $config);
+$serviceManager->get('ModuleManager')->loadModules();
+
+$application = $serviceManager->get('Application');
+//not really $application->bootstrap()->run();
+$locator = $application->getServiceManager();
+
+//Get Default Entity Manager
+$em = $locator->get('doctrine.entitymanager.orm_default');
+ 
+ 
+$helperSet = new \Symfony\Component\Console\Helper\HelperSet(array(
+'db' => new \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper($em->getConnection()),
+'em' => new \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper($em)
+));
+
+\Doctrine\ORM\Tools\Console\ConsoleRunner::run($helperSet);
+ 
+
+
+
+Und die Module.php
+------- LwcMultipleChoice/Module.php
+
+
+
+
+
+---- im Controller
+use Doctrine\ORM\EntityManager; 
+
+/**            
+ * @return Doctrine\ORM\EntityManager
+ */               
+public function getEntityManager()
+{
+    return $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+    
+}
+
+@TODO change routing and namespace missconfiguration
+----
+everything configured we are able to do r
+#php doctrine.php orm:convert-mapping --from-database xml db/xml
+
+
+D:\projects\LwcMultipleChoice>php doctrine.php orm:generate-entities --generate-
+annotations --generate-methods  module/LwcMultipleChoice/src/LwcMultipleChoice/E
+ntity/
+gibt den fehler "not enogugh arguments"
+zurück,
+---- 
+Error: Message
+File mapping drivers must have a valid directory path, however the given pa
+ th [D:\projects\LwcMultipleChoice\module\LwcMultipleChoice\config/../src//E
+ ntity] seems to be incorrect!
+ 
+ Das passiert wenn man vorher vergessen hat die proxies mittels "orm:generate-proxies" zu bauen
+ hier geht es um proxie klassen nach blah blah blah hat nix mit proxy server zu tun 
+ allerdings müssen doe pfade noch angegeben werden
+
+
+
+
+
+---
