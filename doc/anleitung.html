@@ -217,8 +217,12 @@ File mapping drivers must have a valid directory path, however the given pa
  hier geht es um proxie klassen nach blah blah blah hat nix mit proxy server zu tun 
  allerdings müssen doe pfade noch angegeben werden
 
+--
 
+####generate the xml mapping from database
+D:\projects\LwcMultipleChoice>php doctrine.php orm:convert-mapping xml --namespa
+ce=LwcMultipleChoice\Entity --force db/xml
 
-
-
----
+####generate the xml mapping from entities 
+D:\projects\LwcMultipleChoice>php doctrine.php -v orm:generate-entities --gen
+te-annotations=true  --regenerate-entities=true module/LwcMultipleChoice/src

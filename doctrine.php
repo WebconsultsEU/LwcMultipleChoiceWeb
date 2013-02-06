@@ -37,8 +37,9 @@ $serviceManager = new ServiceManager(new ServiceManagerConfig());
 $serviceManager->setService('ApplicationConfig', $config);
 $serviceManager->get('ModuleManager')->loadModules();
 
-$application = $serviceManager->get('Application');
 
+
+$application = $serviceManager->get('Application');
 $appConfig = $application->getConfig();
 $doctrineConfig = $appConfig['doctrine']['connection']['orm_default'];
 
@@ -46,14 +47,23 @@ $doctrineConfig = $appConfig['doctrine']['connection']['orm_default'];
 $config = new \Doctrine\ORM\Configuration();
 $config->setMetadataCacheImpl(new \Doctrine\Common\Cache\ArrayCache);
 $driverImpl = new Doctrine\ORM\Mapping\Driver\XmlDriver(__DIR__ . '/db/xml');
+
 $config->setMetadataDriverImpl($driverImpl);
+
+
 
 $config->setProxyDir(__DIR__ . '/db/proxies');
 $config->setProxyNamespace('Proxies');
 $config->setEntityNamespaces(array('LwcMultipleChoice\Entity'));
 
 //generate EntityManagerInstance
+//For some reason this is needed to generate PHP Classes fom the XML Mappings
 $em = \Doctrine\ORM\EntityManager::create($doctrineConfig, $config);
+
+//For some reason this is needed to generate XML Entities from the database
+//$locator = $application->getServiceManager();
+//$em = $locator->get('doctrine.entitymanager.orm_default');
+
  
 $helperSet = new \Symfony\Component\Console\Helper\HelperSet(array(
 'db' => new \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper($em->getConnection()),

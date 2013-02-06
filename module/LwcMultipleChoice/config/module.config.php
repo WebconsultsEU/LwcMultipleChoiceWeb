@@ -7,13 +7,25 @@ namespace LwcMultipleChoice;
 return array(
   'router' => array(
         'routes' => array(
-            'location' => array(
+            'testTest' => array(
                 'type'    => 'segment',
                 'options' => array(
-                    'route'    => '/test[/:action][/:id]',
-                    'constraints' => array(
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    'route'    => '/test[/:id]',
+                    'constraints' => array(                        
                         'id'     => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'LwcMultipleChoice\Controller\Test',
+                        'action'     => 'test',
+                    ),
+                ),
+            ),
+            'testIndex' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/test[/:action]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',                        
                     ),
                     'defaults' => array(
                         'controller' => 'LwcMultipleChoice\Controller\Test',
@@ -21,6 +33,7 @@ return array(
                     ),
                 ),
             ),
+            
         ),
     ),
   'controllers' => array(
@@ -36,9 +49,9 @@ return array(
   'doctrine' => array(
     'driver' => array(
       __NAMESPACE__ . '_driver' => array(
-        'class' => 'Doctrine\ORM\Mapping\Driver\XmlDriver',
+        'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
         'cache' => 'array',
-        'paths' => array(dirname(dirname(dirname(__DIR__))) . '/db/xml')
+        'paths' => array(__DIR__ . '/../src/' . __NAMESPACE__ . '/Entity')        
       ),
       'orm_default' => array(
         'drivers' => array(

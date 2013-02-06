@@ -6,7 +6,7 @@
     </id>
     <field name="question" type="string" column="question" length="255" nullable="false"/>
     <field name="created" type="datetime" column="created" nullable="false"/>
-    <many-to-one field="test" target-entity="Test">
+    <many-to-one field="test" target-entity="LwcMultipleChoice\Entity\Test">
       <join-columns>
         <join-column name="test_id" referenced-column-name="id"/>
       </join-columns>

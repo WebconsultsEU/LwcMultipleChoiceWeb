@@ -4,8 +4,9 @@
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
+    <field name="answer" type="string" column="answer" length="255" nullable="false"/>
     <field name="points" type="integer" column="points" nullable="false"/>
-    <many-to-one field="question" target-entity="Question">
+    <many-to-one field="question" target-entity="LwcMultipleChoice\Entity\Question">
       <join-columns>
         <join-column name="question_id" referenced-column-name="id"/>
       </join-columns>

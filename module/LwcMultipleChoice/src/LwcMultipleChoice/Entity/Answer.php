@@ -13,6 +13,13 @@ use Doctrine\ORM\Mapping as ORM;
 class Answer
 {
     /**
+     * @var string
+     *
+     * @ORM\Column(name="answer", type="string", length=255, nullable=false)
+     */
+    private $answer;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="points", type="integer", nullable=false)
@@ -38,6 +45,29 @@ class Answer
      */
     private $question;
 
+
+    /**
+     * Set answer
+     *
+     * @param string $answer
+     * @return Answer
+     */
+    public function setAnswer($answer)
+    {
+        $this->answer = $answer;
+    
+        return $this;
+    }
+
+    /**
+     * Get answer
+     *
+     * @return string 
+     */
+    public function getAnswer()
+    {
+        return $this->answer;
+    }
 
     /**
      * Set points
