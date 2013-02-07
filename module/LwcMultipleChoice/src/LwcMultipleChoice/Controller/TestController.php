@@ -50,7 +50,7 @@ class TestController  extends AbstractActionController {
          
         // This is not the optimal way for performance reasons yet there should be something like a join possible 
         $test = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Test', $id);
-        $formBuilder = new Form\FormBuilder();
+        $formBuilder = new Form\TestFormBuilder();
         $questions = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Question')->findBy(array('test' => $test));        
         foreach($questions as $question) {
             //One SQL statement per request

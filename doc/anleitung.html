@@ -226,3 +226,11 @@ ce=LwcMultipleChoice\Entity --force db/xml
 ####generate the xml mapping from entities 
 D:\projects\LwcMultipleChoice>php doctrine.php -v orm:generate-entities --gen
 te-annotations=true  --regenerate-entities=true module/LwcMultipleChoice/src
+
+
+##
+displaying the form
+--- Object provided to Escape helper, but flags do not allow recursion
+
+http://framework.zend.com/manual/2.0/en/modules/zend.form.quick-start.html
+-- official documentations says it is recommended to add fieldset with csrf and submit

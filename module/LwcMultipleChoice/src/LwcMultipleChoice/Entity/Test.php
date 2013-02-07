@@ -2,13 +2,17 @@
 
 namespace LwcMultipleChoice\Entity;
 
+
 use Doctrine\ORM\Mapping as ORM;
+use Zend\Form\Annotation;
+
 
 /**
  * Test
  *
  * @ORM\Table(name="test")
  * @ORM\Entity
+ * @Annotation\Name("Test")
  */
 class Test
 {
@@ -16,6 +20,7 @@ class Test
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=60, nullable=false)
+     * @Annotation\Options({"label":"Name:"})
      */
     private $name;
 
@@ -23,6 +28,7 @@ class Test
      * @var integer
      *
      * @ORM\Column(name="user_id", type="integer", nullable=false)
+     * @Annotation\Attributes({"type":"hidden"})
      */
     private $userId;
 
@@ -30,6 +36,7 @@ class Test
      * @var \DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
+     * @Annotation\Exclude()
      */
     private $created;
 
@@ -39,6 +46,7 @@ class Test
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Annotation\Attributes({"type":"hidden"})
      */
     private $id;
 

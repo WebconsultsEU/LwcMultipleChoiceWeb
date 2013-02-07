@@ -20,6 +20,20 @@ return array(
                     ),
                 ),
             ),
+            'testAdmin' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/testadmin[/:action][/:id]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'LwcMultipleChoice\Controller\Admin',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
             'testIndex' => array(
                 'type'    => 'segment',
                 'options' => array(
@@ -39,6 +53,7 @@ return array(
   'controllers' => array(
     'invokables' => array(
             'LwcMultipleChoice\Controller\Test' => 'LwcMultipleChoice\Controller\TestController',
+            'LwcMultipleChoice\Controller\Admin' => 'LwcMultipleChoice\Controller\AdminController',
         ),
   ),
   'view_manager' => array(
