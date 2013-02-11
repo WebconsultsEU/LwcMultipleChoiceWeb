@@ -3,6 +3,7 @@
 namespace LwcMultipleChoice\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Zend\Form\Annotation;
 
 /**
  * Answer
@@ -32,6 +33,8 @@ class Answer
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Annotation\Attributes({"type":"hidden"})
+     * 
      */
     private $id;
 
@@ -42,6 +45,7 @@ class Answer
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="question_id", referencedColumnName="id")
      * })
+     * @Annotation\Exclude()
      */
     private $question;
 

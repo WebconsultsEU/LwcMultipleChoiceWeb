@@ -1,0 +1,30 @@
+<div class="hero-unit">
+    <h1>Edit Questions</h1>
+    <?=$this->test->getName()?>
+
+
+        
+<?php foreach($this->questions as $question):
+    ?>
+        <li> <h3><?=$question->getQuestion()?></h3> 
+            <a class="btn btn-small btn-primary" href="<?=$this->url(null, array('action' => 'editquestion', 'id' => $question->getId()))?>">
+                <i class="icon-pencil"></i>Edit</a>
+        </li>
+        
+<ul>
+    <?php foreach($this->answers[$question->getId()] as $answer):
+    ?>
+    <li> <a href="<?=$this->url(null, array('action' => 'editanswer', 'id' => $answer->getId()))?>">
+                <i class="icon-pencil"></i>Edit</a>
+                
+        <?=$answer->getAnswer()?> - <?=$answer->getPoints()?></li>
+    
+    <?php endforeach; //answers
+    ?>
+</ul>
+<?php endforeach; //questions
+
+?>    
+
+
+

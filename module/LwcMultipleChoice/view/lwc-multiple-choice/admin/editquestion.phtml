@@ -13,8 +13,7 @@ $form = $this->form; ?>
     
 <?php echo $this->form()->closeTag($form); ?>
     
-    
-<a href="<?=$this->url(null, array('action' => 'listquestions', 'id' => $this->test->getId()))?>"> Fragen Bearbeiten </a>
+<a href="<?=$this->url(null, array('action' => 'listquestions', 'id' => $this->question->getTest()->getId()))?>">Back</a>
 </div>
 
 

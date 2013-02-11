@@ -1,5 +1,6 @@
 <div class="hero-unit">
-    <h1>Edit Test</h1>
+    <h1>Edit Answer</h1>
+    <?=$this->answer->getQuestion()->getQuestion()?> ?<br />
     
 <?php 
 /**
@@ -13,8 +14,7 @@ $form = $this->form; ?>
     
 <?php echo $this->form()->closeTag($form); ?>
     
-    
-<a href="<?=$this->url(null, array('action' => 'listquestions', 'id' => $this->test->getId()))?>"> Fragen Bearbeiten </a>
+<a href="<?=$this->url(null, array('action' => 'listquestions', 'id' => $this->answer->getQuestion()->getTest()->getId()))?>">Back</a>
 </div>
 
 

@@ -3,6 +3,8 @@
 namespace LwcMultipleChoice\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Zend\Form\Annotation;
+
 
 /**
  * Question
@@ -23,6 +25,7 @@ class Question
      * @var \DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
+     * @Annotation\Exclude()
      */
     private $created;
 
@@ -32,6 +35,7 @@ class Question
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Annotation\Attributes({"type":"hidden"})
      */
     private $id;
 
@@ -40,8 +44,9 @@ class Question
      *
      * @ORM\ManyToOne(targetEntity="LwcMultipleChoice\Entity\Test")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="test_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="test_id", referencedColumnName="id")
      * })
+     * @Annotation\Exclude()
      */
     private $test;
 
