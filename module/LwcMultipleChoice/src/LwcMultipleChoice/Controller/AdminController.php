@@ -75,6 +75,7 @@ class AdminController  extends AbstractActionController {
     
     /**
      *  Edit the basic test entity 
+     * this could be done by the new editEntity Function but left for historical reasons;
      */
     public function edittestAction()
     {
@@ -142,13 +143,15 @@ class AdminController  extends AbstractActionController {
      * @return array form and entity
      * @throws Exception 
      */
-    public function processEntityEdit($entityClass) {
+    public function processEntityEdit($entityClass, $entity = null) {
         
         $entityManager = $this->getEntityManager();
         $id = $this->params('id');
         
-        if($id) {
+        if($id && $entity == null) {
             $entity = $this->getEntityManager()->find($entityClass, $id);
+        } elseif($entity != null){        
+            //nothing
         } else {
             throw new Exception('no test given.');
         }
@@ -239,12 +242,28 @@ class AdminController  extends AbstractActionController {
      */
     public function editquestionAction()
     {
+        $entity = null;
+        //process new questions 
+        if($this->params('new') == true) {
+            $testId = $this->params('testid');
+            if(!$testId) {
+                throw new \Exception('no testid given');
+            }            
+            $entity = new LwcMultipleChoice\Entity\Question();
+            $entity->setTest($this->getEntityManager()->find('LwcMultipleChoice\Entity\Test', $testId));
+        }
         
-        $result = $this->processEntityEdit('LwcMultipleChoice\Entity\Question');
+        $result = $this->processEntityEdit('LwcMultipleChoice\Entity\Question', $entity);
         $question = $result['entity'];
+        
+        
+            
+        
         if($result['status'] == 'saved') {                        
             return $this->redirect()->toRoute(null, array('action' => 'listquestions', 'id'=>$question->getTest()->getId()));
         } 
+        
+        
         
         $view =  new ViewModel();
         $view->form = $result['form'];
