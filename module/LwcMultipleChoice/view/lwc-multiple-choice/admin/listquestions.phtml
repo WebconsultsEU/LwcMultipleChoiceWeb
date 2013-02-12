@@ -6,16 +6,23 @@
         
 <?php foreach($this->questions as $question):
     ?>
-        <li> <h3><?=$question->getQuestion()?></h3> 
-            <a class="btn btn-small btn-primary" href="<?=$this->url(null, array('action' => 'editquestion', 'id' => $question->getId()))?>">
-                <i class="icon-pencil"></i>Edit</a>
+        <li> <h3><?=$question->getQuestion()?>  <a class="btn btn btn-mini" href="<?=$this->url(null, array('action' => 'editquestion', 'id' => $question->getId()))?>">
+                <i class="icon-pencil"></i>Edit</a>                
+            <a class="btn btn btn-mini" href="<?=$this->url(null, array('action' => 'deletequestion', 'id' => $question->getId()))?>">
+                <i class="icon-trash"></i>Delete</a></h3> 
+           
         </li>
         
 <ul>
+    <li><a href="<?=$this->url(null, array('action' => 'editanswer',))?>?new=true&questionId=<?=$question->getId()?>""><i class="icon-pencil"></i>New Answer</a></li>
     <?php foreach($this->answers[$question->getId()] as $answer):
     ?>
-    <li> <a href="<?=$this->url(null, array('action' => 'editanswer', 'id' => $answer->getId()))?>">
+    
+    <li>
+       <a class="btn btn btn-mini" href="<?=$this->url(null, array('action' => 'editanswer', 'id' => $answer->getId()))?>">
                 <i class="icon-pencil"></i>Edit</a>
+       <a class="btn btn btn-mini" href="<?=$this->url(null, array('action' => 'deleteanswer', 'id' => $answer->getId()))?>">
+                <i class="icon-trash"></i>Delete</a>
                 
         <?=$answer->getAnswer()?> - <?=$answer->getPoints()?></li>
     
@@ -23,8 +30,10 @@
     ?>
 </ul>
 <?php endforeach; //questions
+?>
+<a href="<?=$this->url(null, array('action' => 'editquestion'))?>?new=true&testId=<?=$this->test->getId()?>">New Question<a>
 
-?>    
+    
 
 
 

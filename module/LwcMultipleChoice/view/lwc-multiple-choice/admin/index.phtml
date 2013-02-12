@@ -1,6 +1,20 @@
 <div class="hero-unit">
-    <h1>Test Modul Admi</h1>
-    Von hier aus können die Tests bearbeitet werden
+    <h1>Test Admin</h1>
+    
+    <a href="<?=$this->url(null, array('action' => 'edittest'))?>?new=true"> Neuer Test </a>
+    
+    <ul>            
+<?php foreach($this->tests as $test):
+    ?>
+        <li> <h3><?=$test->getName()?>  <a class="btn btn btn-mini" href="<?=$this->url(null, array('action' => 'listquestions', 'id' => $test->getId()))?>">
+                <i class="icon-pencil"></i>Edit</a>                
+            <a class="btn btn btn-mini" href="<?=$this->url(null, array('action' => 'deletetest', 'id' => $test->getId()))?>">
+                <i class="icon-trash"></i>Delete</a></h3> 
+           
+ 
+<?php endforeach; //tests
+    ?>
+    
 </div>
 
 

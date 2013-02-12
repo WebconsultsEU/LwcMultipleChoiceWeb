@@ -49,7 +49,7 @@ class Answer
      */
     private $question;
 
-
+    
     /**
      * Set answer
      *

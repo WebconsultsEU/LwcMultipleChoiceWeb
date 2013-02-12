@@ -50,7 +50,13 @@ class Test
      */
     private $id;
 
-
+    
+    public function __construct()
+    {
+        $this->created = new \DateTime("now");
+    }
+    
+    
     /**
      * Set name
      *

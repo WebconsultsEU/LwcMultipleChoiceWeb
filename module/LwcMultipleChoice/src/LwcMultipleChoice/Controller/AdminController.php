@@ -35,8 +35,13 @@ class AdminController  extends AbstractActionController {
     
     public function indexAction()
     {
-        throw new \Exception('This has no function yet');
-        return new ViewModel();
+        $view = new ViewModel();
+        
+        $tests = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Test')->findAll();
+        
+        $view->tests = $tests;
+        
+        return $view;
         
     }
     
@@ -45,15 +50,11 @@ class AdminController  extends AbstractActionController {
      */
     public function listquestionsAction()
     {
-        
-         $entityManager = $this->getEntityManager();
-        
          $id = $this->params('id');
          if($id) {
             $test = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Test', $id);
          } else {
-             //there should be a better way to get a form annotation
-             $test = new Entity\Test();
+            throw new \Exceptioon('no id given');
          }
         
         $questions = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Question')->findBy(array('test' => $test));
@@ -75,24 +76,24 @@ class AdminController  extends AbstractActionController {
     
     /**
      *  Edit the basic test entity 
-     * this could be done by the new editEntity Function but left for historical reasons;
+     *  this could be done by the new editEntity Function but left for historical reasons;
      */
     public function edittestAction()
-    {
-        
-        $entityManager = $this->getEntityManager();
-        
+    {        
+        $entityManager = $this->getEntityManager();        
         $testId = $this->params('id');
+        $new = $this->getRequest()->getQuery()->get('new', null);
         
         if($testId) {
             $test = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Test', $testId);
+        } elseif($new) {
+            $test = new \LwcMultipleChoice\Entity\Test();            
         } else {
             throw new Exception('no test given.');
         }
          
         //Doctrine form Builder supports building forms by annotations from doctrine entitys
-        $builder = new \DoctrineORMModule\Form\Annotation\AnnotationBuilder( $entityManager);
-        
+        $builder = new \DoctrineORMModule\Form\Annotation\AnnotationBuilder($entityManager);        
         //Create a form for the Test-Annotation Object
         $form = $builder->createForm( $test );
         //create a DoctrineEntity Hydrator for the Form Annotation
@@ -132,7 +133,6 @@ class AdminController  extends AbstractActionController {
         $view->test = $test;
         
         return $view;
-
     }
     
     /**
@@ -143,18 +143,9 @@ class AdminController  extends AbstractActionController {
      * @return array form and entity
      * @throws Exception 
      */
-    public function processEntityEdit($entityClass, $entity = null) {
-        
+    public function processEntityEdit($entityClass, $entity)
+    {        
         $entityManager = $this->getEntityManager();
-        $id = $this->params('id');
-        
-        if($id && $entity == null) {
-            $entity = $this->getEntityManager()->find($entityClass, $id);
-        } elseif($entity != null){        
-            //nothing
-        } else {
-            throw new Exception('no test given.');
-        }
          
         //Doctrine form Builder supports building forms by annotations from doctrine entitys
         $builder = new \DoctrineORMModule\Form\Annotation\AnnotationBuilder($entityManager);
@@ -177,7 +168,9 @@ class AdminController  extends AbstractActionController {
         $form->add($submit);
         
         if($this->getRequest()->isPost()) {
+            
             $form->setData($this->getRequest()->getPost());
+            
             if($form->isValid()) {
                 //bind post values to form
                 $form->bindValues();                 
@@ -190,13 +183,11 @@ class AdminController  extends AbstractActionController {
                 
                 return array('entity' => $entity,
                              'form' => $form,
-                             'status' => 'saved') ;
-        
+                             'status' => 'saved') ;        
             } else {
                 //an invalid form has been submitted
                 throw new Exception('Invalid Form submitted');
-            }
-            
+            }            
         }
          // i am not satisfied with this yet maybe turn it to a result object later
          return array('entity' => $entity,
@@ -206,7 +197,8 @@ class AdminController  extends AbstractActionController {
         
     }
     
-     /**
+    
+    /**
      * Edit the basic answer entity 
      * 
      * Taking usage of the save Entity answer
@@ -215,7 +207,26 @@ class AdminController  extends AbstractActionController {
     public function editanswerAction()
     {
         
-        $result = $this->processEntityEdit('LwcMultipleChoice\Entity\Answer');
+        $new = $this->getRequest()->getQuery()->get('new', null);
+        $entity = null;
+        //process new questions 
+        if($new) {
+            $questionId = $this->getRequest()->getQuery()->get('questionId', null);
+            if(!$questionId) {
+                throw new \Exception('no questionId given');
+            }            
+            $entity = new \LwcMultipleChoice\Entity\Answer();
+            $entity->setQuestion($this->getEntityManager()->find('LwcMultipleChoice\Entity\Question', $questionId));
+        } else {
+                $id = $this->params('id');                    
+                $entity = $this->getEntityManager()->find($entityClass, $id);
+            if(!$entity) {
+                throw new \Exception('Answer not found');
+            }
+                
+        }
+        
+        $result = $this->processEntityEdit('LwcMultipleChoice\Entity\Answer', $entity);
         $answer = $result['entity'];
         
         if($result['status'] == 'saved') {                        
@@ -228,7 +239,6 @@ class AdminController  extends AbstractActionController {
         $view->answer = $answer;
         
         return $view;
-
     }
     
     
@@ -243,37 +253,69 @@ class AdminController  extends AbstractActionController {
     public function editquestionAction()
     {
         $entity = null;
+        $new = $this->getRequest()->getQuery()->get('new', null);
         //process new questions 
-        if($this->params('new') == true) {
-            $testId = $this->params('testid');
+        if($new) {
+            $testId = $this->getRequest()->getQuery()->get('testId', null);
             if(!$testId) {
                 throw new \Exception('no testid given');
             }            
-            $entity = new LwcMultipleChoice\Entity\Question();
+            $entity = new \LwcMultipleChoice\Entity\Question();
             $entity->setTest($this->getEntityManager()->find('LwcMultipleChoice\Entity\Test', $testId));
         }
         
         $result = $this->processEntityEdit('LwcMultipleChoice\Entity\Question', $entity);
         $question = $result['entity'];
         
-        
-            
-        
         if($result['status'] == 'saved') {                        
             return $this->redirect()->toRoute(null, array('action' => 'listquestions', 'id'=>$question->getTest()->getId()));
         } 
-        
-        
         
         $view =  new ViewModel();
         $view->form = $result['form'];
         $view->question = $question;
         
         return $view;
-
+    }
+    
+    public function deleteanswerAction()
+    {
+        $id = $this->param('id');        
+        if($id) {
+            $answer  = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Answer', $id);
+            $testId = $answer->getQuestion()->getTest()->getId();            
+            $this->getEntityManager()->remove($answer);
+        } else {
+            throw new \Exception('Answer not Found');
+        }
+        $this->getEntityManager()->flush();
+        return $this->redirect()->toRoute(null, array('action' => 'listquestions', 'id' => $testId));
     }
     
     
+    public function deletequestionAction()
+    {
+        $id = $param->get('id');
+        if($id) {
+            $question = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Question', $id) ;
+            $testId = $question->getTest()->getId();
+            $this->getEntityManager()->remove($question);
+        } else {
+            throw new \Exception('Question not found');
+        }
+        $this->getEntityManager()->flush();
+        return $this->redirect()->toRoute(null, array('action' => 'listquestions', 'id' => $testId));
+    }
     
+    public function deletetestAction()
+    {        
+        $id = $param->get('id');
+        if($id) {
+            $test = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Test', $id) ;            
+            $this->getEntityManager()->remove($test);
+        }
+        $this->getEntityManager()->flush();
+        return $this->redirect()->toRoute(null, array('action' => 'index'));
+    }
     
 }

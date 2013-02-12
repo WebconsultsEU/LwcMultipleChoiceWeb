@@ -49,7 +49,11 @@ class Question
      * @Annotation\Exclude()
      */
     private $test;
-
+    
+    public function __construct()
+    {
+        $this->created = new \DateTime("now");
+    }
 
     /**
      * Set question
