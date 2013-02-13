@@ -17,6 +17,7 @@ class Answer
      * @var string
      *
      * @ORM\Column(name="answer", type="string", length=255, nullable=false)
+     * @Annotation\Options({"label":"Question:"})
      */
     private $answer;
 
@@ -24,6 +25,7 @@ class Answer
      * @var integer
      *
      * @ORM\Column(name="points", type="integer", nullable=false)
+     * @Annotation\Options({"label":"Points:"})
      */
     private $points;
 

@@ -18,6 +18,7 @@ class Question
      * @var string
      *
      * @ORM\Column(name="question", type="string", length=255, nullable=false)
+     * @Annotation\Options({"label":"Question "})
      */
     private $question;
 

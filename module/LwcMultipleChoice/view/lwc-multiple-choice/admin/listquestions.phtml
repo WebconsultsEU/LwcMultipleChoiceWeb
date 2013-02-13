@@ -13,8 +13,7 @@
            
         </li>
         
-<ul>
-    <li><a href="<?=$this->url(null, array('action' => 'editanswer',))?>?new=true&questionId=<?=$question->getId()?>""><i class="icon-pencil"></i>New Answer</a></li>
+<ul>    
     <?php foreach($this->answers[$question->getId()] as $answer):
     ?>
     
@@ -28,6 +27,7 @@
     
     <?php endforeach; //answers
     ?>
+<li><a href="<?=$this->url(null, array('action' => 'editanswer',))?>?new=true&questionId=<?=$question->getId()?>""><i class="icon-pencil"></i>New Answer</a></li>    
 </ul>
 <?php endforeach; //questions
 ?>

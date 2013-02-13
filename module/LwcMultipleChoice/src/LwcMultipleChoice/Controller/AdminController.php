@@ -219,7 +219,7 @@ class AdminController  extends AbstractActionController {
             $entity->setQuestion($this->getEntityManager()->find('LwcMultipleChoice\Entity\Question', $questionId));
         } else {
                 $id = $this->params('id');                    
-                $entity = $this->getEntityManager()->find($entityClass, $id);
+                $entity = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Answer', $id);
             if(!$entity) {
                 throw new \Exception('Answer not found');
             }
@@ -254,8 +254,13 @@ class AdminController  extends AbstractActionController {
     {
         $entity = null;
         $new = $this->getRequest()->getQuery()->get('new', null);
-        //process new questions 
-        if($new) {
+        
+        $id = $this->params('id');
+        
+        if($id) {
+            $entity = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Question', $id);
+        //process new questions     
+        } elseif($new) {
             $testId = $this->getRequest()->getQuery()->get('testId', null);
             if(!$testId) {
                 throw new \Exception('no testid given');
@@ -263,6 +268,7 @@ class AdminController  extends AbstractActionController {
             $entity = new \LwcMultipleChoice\Entity\Question();
             $entity->setTest($this->getEntityManager()->find('LwcMultipleChoice\Entity\Test', $testId));
         }
+        
         
         $result = $this->processEntityEdit('LwcMultipleChoice\Entity\Question', $entity);
         $question = $result['entity'];
@@ -280,7 +286,7 @@ class AdminController  extends AbstractActionController {
     
     public function deleteanswerAction()
     {
-        $id = $this->param('id');        
+        $id = $this->params('id');        
         if($id) {
             $answer  = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Answer', $id);
             $testId = $answer->getQuestion()->getTest()->getId();            
@@ -295,10 +301,15 @@ class AdminController  extends AbstractActionController {
     
     public function deletequestionAction()
     {
-        $id = $param->get('id');
+        $id = $this->params('id');
         if($id) {
             $question = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Question', $id) ;
             $testId = $question->getTest()->getId();
+            $answers = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Answer')->findBy(array("question" => $question));            
+            //@TODO Performance: here we create another big performance issue, expect 1000 answers
+            foreach($answers as $answer) {
+                $this->getEntityManager()->remove($answer);
+            }            
             $this->getEntityManager()->remove($question);
         } else {
             throw new \Exception('Question not found');
@@ -309,9 +320,21 @@ class AdminController  extends AbstractActionController {
     
     public function deletetestAction()
     {        
-        $id = $param->get('id');
+        $id = $this->params('id');
         if($id) {
-            $test = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Test', $id) ;            
+            $test = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Test', $id) ;
+           
+            //@TODO Performance worse performance here with recursive delete
+            $questions = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Question')->findBy(array("test" => $test));            
+            
+            foreach($questions as $question) {
+                $answers = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Answer')->findBy(array("question" => $question));            
+                foreach($answers as $answer) {
+                    $this->getEntityManager()->remove($answer);
+                }            
+            $this->getEntityManager()->remove($question);
+            }
+            
             $this->getEntityManager()->remove($test);
         }
         $this->getEntityManager()->flush();

@@ -1,6 +1,20 @@
 <div class="hero-unit">
-    <h1>Test Modul</h1>
-    Dies ist ein Modul für Multiple Choice Tests
+    <h1>All Tests</h1>
+    
+    <a href="<?=$this->url(null, array('action' => 'edittest'))?>?new=true"> Neuer Test </a>
+    
+    <ul>            
+<?php foreach($this->tests as $test):
+    ?>
+        <li> <h3><?=$test->getName()?>  <a class="btn btn btn-small" href="<?=$this->url('testTest', array('action' => 'test', 'id' => $test->getId()))?>">
+                Take Test</a>                
+            </h3> 
+        </li>
+           
+ 
+<?php endforeach; //tests
+    ?>
+    
 </div>
 
 

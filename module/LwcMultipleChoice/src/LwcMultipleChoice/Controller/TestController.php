@@ -27,8 +27,10 @@ class TestController  extends AbstractActionController {
     
     public function indexAction()
     {
-        throw new \Exception('This has no function yet');
-        return new ViewModel();
+        $view = new ViewModel();
+        $tests = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Test')->findAll();
+        $view->tests = $tests;
+        return $view;
         
     }
     /**
