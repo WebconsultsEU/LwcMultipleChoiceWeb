@@ -1,0 +1,35 @@
+<?php
+
+/*
+ * Datenbank Configuration für Doctrine
+ */
+
+$applicationPath = dirname(dirname(__DIR__));
+
+return array(
+  'doctrine' => array(
+    'connection' => array(
+      'orm_default' => array(
+        'driverClass' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
+        'params' => array(
+          'host'     => 'localhost',
+          'port'     => '3306',
+          'user'     => 'root',
+          'password' => '',
+          'dbname'   => 'lwcmultiplechoice',
+          //'entities' => $applicationPath.'/module/LwcMultipleChoice/src/LwcMultipleChoice/Entity', //@todo move to mudile later
+          'entities' =>  $applicationPath.'/module/LwcMultipleChoice/src/LwcMultipleChoice/Entity/', //@todo move to mudile later
+          'proxies' => array ( 
+              'location' =>  $applicationPath.'/module/LwcMultipleChoice/src/LwcMultipleChoice/Entity/Proxies',
+              'ns' => 'Proxies'
+              ),
+          'metadata' => array (
+              'cache' => "Doctrine\Common\Cache\ApcCache",
+              'driver' => "Doctrine\ORM\Mapping\Driver\XmlDriver",
+              'proxyDir' => $applicationPath. "/db/proxies",
+              'entityDir' => $applicationPath.'/db/xml')
+        )        
+      )
+    )
+  ),
+);

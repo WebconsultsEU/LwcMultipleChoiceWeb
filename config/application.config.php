@@ -2,9 +2,11 @@
 return array(
     'modules' => array(
         'Application',
+        'ZfcUser',
         'LwcMultipleChoice',
         'DoctrineModule',
         'DoctrineORMModule'
+        
     ),
     'module_listener_options' => array(
         'config_glob_paths'    => array(

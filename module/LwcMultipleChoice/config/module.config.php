@@ -5,7 +5,7 @@
  */
 namespace LwcMultipleChoice;
 
-return array(
+return array(  
   'router' => array(
         'routes' => array(
             'testTest' => array(
@@ -75,5 +75,9 @@ return array(
         )
       )
     )
-  )
+  ),
+  //'auth_service_name' => 'zfcuser_user_service',
+  'auth_login_url' => '/user/login',
+    
+   
 );
