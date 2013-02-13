@@ -1,5 +1,4 @@
 <?php
-
 namespace LwcMultipleChoice\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
@@ -9,7 +8,8 @@ use LwcMultipleChoice\Form;
 use LwcMultipleChoice\Entity;
 
 
-class TestController  extends AbstractActionController {
+class TestController  extends AbstractActionController 
+{
    
     /**            
     * @var Doctrine\ORM\EntityManager
@@ -54,19 +54,21 @@ class TestController  extends AbstractActionController {
         // This is not the optimal way for performance reasons yet there should be something like a join possible 
         $test = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Test', $id);
         $formBuilder = new Form\TestFormBuilder();
-        $questions = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Question')->findBy(array('test' => $test));        
-        foreach($questions as $question) {
+        $questions = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Question')
+                ->findBy(array('test' => $test));        
+        foreach ($questions as $question) {
             //One SQL statement per request
-            $answers = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Answer')->findBy(array('question' => $question));
+            $answers = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Answer')
+                    ->findBy(array('question' => $question));
             $formBuilder->addQuestion($question, $answers);
         }
         $form = $formBuilder->getBuildedForm();
         
         //process submitted form
-        if($this->getRequest()->isPost()) {
+        if ($this->getRequest()->isPost()) {
         //bing post data to form 
         $form->setData($this->getRequest()->getPost());
-            if($form->isValid()) {                
+            if ($form->isValid()) {                
                 $testResult = $this->processTestResult($form, $test);
                 return $this->testResult($testResult);
                 
@@ -100,16 +102,19 @@ class TestController  extends AbstractActionController {
         $testData = $form->getData();
         $testResult = new Entity\TestResult();
         
-        //this method to calculate the test results does not seem to be the best but it is working for the first try we will do performance testing later on
-        $questions = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Question')->findBy(array('test' => $test));        
+        //this method to calculate the test results does not seem to be the best 
+        //but it is working for the first try we will do performance testing later on
+        $questions = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Question')
+                ->findBy(array('test' => $test));        
         
         $rightQuestions = array();
-        foreach($questions as $question) {            
+        foreach ($questions as $question) {            
             //performance issiue as any result is fetched via question causing new sql request
-            $answers = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Answer')->findBy(array('question' => $question));
-            foreach($answers as $answer) {
+            $answers = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Answer')
+                    ->findBy(array('question' => $question));
+            foreach ($answers as $answer) {
             //this is the most stupid way to implement the calculation  we will learn mysql way later
-                if( $testData['answers_'.$question->getId()] == $answer->getId() ) {
+                if ($testData['answers_'.$question->getId()] == $answer->getId()) {
                     $testResult->addPointsScored($answer->getPoints());                    
                     $rightQuestions[] = $question->getId();
                 } else {

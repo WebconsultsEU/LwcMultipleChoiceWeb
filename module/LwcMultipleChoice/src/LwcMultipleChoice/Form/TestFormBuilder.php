@@ -1,6 +1,5 @@
 <?php
 
-
 namespace LwcMultipleChoice\Form;
 
 
@@ -15,7 +14,8 @@ use LwcMultipleChoice\Entity\Answer;
  * not fully satisfied with it yet.  
  */
 
-class TestFormBuilder {
+class TestFormBuilder
+{
     /**
      *
      * @var Zend\Form\Form
@@ -24,14 +24,16 @@ class TestFormBuilder {
     
     
     
-    public function __construct() {
+    public function __construct()
+    {
         $this->form = new Form();
     }
     /**
      *
      * @return Zend\Form\Form
      */
-    private function getForm(){
+    private function getForm()
+    {
         return $this->form; 
     }
     
@@ -42,12 +44,13 @@ class TestFormBuilder {
      * @param Question $question
      * @param Answer[] $answers 
      */
-    public function addQuestion(Question $question, $answers) {
+    public function addQuestion(Question $question, $answers) 
+    {
         
         $radio = new Element\Radio('answers_'.$question->getId());
         $radio->setLabel($question->getQuestion());        
         $valueOptions = array();
-        foreach($answers as $answer) {
+        foreach ($answers as $answer) {
             
             $valueOptions[$answer->getId()] = $answer->getAnswer();
         }        

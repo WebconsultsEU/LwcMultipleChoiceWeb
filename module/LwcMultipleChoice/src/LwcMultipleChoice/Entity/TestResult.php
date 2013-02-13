@@ -12,7 +12,8 @@ namespace LwcMultipleChoice\Entity;
  *
  * @author John Behrens <John.behrens@WebConsults.eu>
  */
-class TestResult {
+class TestResult
+{
     
     
     private $pointsMissed;
@@ -20,38 +21,44 @@ class TestResult {
     
     private $questionsTotal;
    
-    public function getPointsMissed() {
+    public function getPointsMissed() 
+    {
         return $this->pointsMissed;
     }
 
-    public function setPointsMissed($pointsMissed) {
+    public function setPointsMissed($pointsMissed) 
+    {
         $this->pointsMissed = $pointsMissed;
     }
 
-    public function getPointsScored() {
+    public function getPointsScored() 
+    {   
         return $this->pointsScored;
     }
 
-    public function setPointsScored($pointsScored) {
+    public function setPointsScored($pointsScored) 
+    {
         $this->pointsScored = $pointsScored;
     }
 
-    public function getQuestionsTotal() {
+    public function getQuestionsTotal()
+    {
         return $this->questionsTotal;
     }
 
-    public function setQuestionsTotal($questionsTotal) {
+    public function setQuestionsTotal($questionsTotal) 
+    {
         $this->questionsTotal = $questionsTotal;
     }
     
-    public function addPointsScored($points) {
+    public function addPointsScored($points) 
+    {
         $this->setPointsScored($this->getPointsScored() + $points);
     }
-    public function addPointsMissed($points) {
+    public function addPointsMissed($points) 
+    {
         $this->setPointsScored($this->getPointsScored() + $points);
     }
 
 
 }
-
-?>

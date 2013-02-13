@@ -12,7 +12,8 @@ use DoctrineORMModule\Form\Annotation\AnnotationBuilder;
 
 
 
-class AdminController  extends AbstractActionController {
+class AdminController  extends AbstractActionController
+{
    
     /**            
     * @var Doctrine\ORM\EntityManager
@@ -51,17 +52,19 @@ class AdminController  extends AbstractActionController {
     public function listquestionsAction()
     {
          $id = $this->params('id');
-         if($id) {
+         if ($id) {
             $test = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Test', $id);
          } else {
             throw new \Exceptioon('no id given');
          }
         
-        $questions = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Question')->findBy(array('test' => $test));
+        $questions = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Question')
+                ->findBy(array('test' => $test));
         $answers = array();
-        foreach($questions as $question) {
+        foreach ($questions as $question) {
         //bad bad bad performance lack but welcome to doctrine no time to figure out that join yet
-            $answers[$question->getId()] = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Answer')->findBy(array('question' => $question)); 
+            $answers[$question->getId()] = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Answer')
+                    ->findBy(array('question' => $question)); 
         }
                 
         $view =  new ViewModel();
@@ -84,9 +87,9 @@ class AdminController  extends AbstractActionController {
         $testId = $this->params('id');
         $new = $this->getRequest()->getQuery()->get('new', null);
         
-        if($testId) {
+        if ($testId) {
             $test = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Test', $testId);
-        } elseif($new) {
+        } elseif ($new) {
             $test = new \LwcMultipleChoice\Entity\Test();            
         } else {
             throw new Exception('no test given.');
@@ -95,9 +98,12 @@ class AdminController  extends AbstractActionController {
         //Doctrine form Builder supports building forms by annotations from doctrine entitys
         $builder = new \DoctrineORMModule\Form\Annotation\AnnotationBuilder($entityManager);        
         //Create a form for the Test-Annotation Object
-        $form = $builder->createForm( $test );
+        $form = $builder->createForm($test);
         //create a DoctrineEntity Hydrator for the Form Annotation
-        $hydrator = new  \DoctrineORMModule\Stdlib\Hydrator\DoctrineEntity($entityManager, 'LwcMultipleChoice\Entity\Test');
+        $hydrator = new  \DoctrineORMModule\Stdlib\Hydrator\DoctrineEntity(
+            $entityManager, 
+            'LwcMultipleChoice\Entity\Test'
+        );
         $form->setHydrator($hydrator);
         $form->bind($test);
         //prevent re-binding of data values before validate
@@ -111,9 +117,9 @@ class AdminController  extends AbstractActionController {
                ->setValue('Bearbeiten');                       
         $form->add($submit);
         
-        if($this->getRequest()->isPost()) {
+        if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
-            if($form->isValid()) {
+            if ($form->isValid()) {
                 //bind post values to form
                 $form->bindValues();                 
                 //retrieve the test object with changed date from form using previously defined DoctrineEntity Hydrator
@@ -151,7 +157,7 @@ class AdminController  extends AbstractActionController {
         $builder = new \DoctrineORMModule\Form\Annotation\AnnotationBuilder($entityManager);
         
         //Create a form for the Test-Annotation Object
-        $form = $builder->createForm( $entity );
+        $form = $builder->createForm($entity);
         //create a DoctrineEntity Hydrator for the Form Annotation
         $hydrator = new  \DoctrineORMModule\Stdlib\Hydrator\DoctrineEntity($entityManager, $entityClass);
         $form->setHydrator($hydrator);
@@ -167,11 +173,11 @@ class AdminController  extends AbstractActionController {
                ->setValue('Save');                       
         $form->add($submit);
         
-        if($this->getRequest()->isPost()) {
+        if ($this->getRequest()->isPost()) {
             
             $form->setData($this->getRequest()->getPost());
             
-            if($form->isValid()) {
+            if ($form->isValid()) {
                 //bind post values to form
                 $form->bindValues();                 
                 //retrieve the test object with changed date from form using previously defined DoctrineEntity Hydrator
@@ -210,9 +216,9 @@ class AdminController  extends AbstractActionController {
         $new = $this->getRequest()->getQuery()->get('new', null);
         $entity = null;
         //process new questions 
-        if($new) {
+        if ($new) {
             $questionId = $this->getRequest()->getQuery()->get('questionId', null);
-            if(!$questionId) {
+            if (!$questionId) {
                 throw new \Exception('no questionId given');
             }            
             $entity = new \LwcMultipleChoice\Entity\Answer();
@@ -220,7 +226,7 @@ class AdminController  extends AbstractActionController {
         } else {
                 $id = $this->params('id');                    
                 $entity = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Answer', $id);
-            if(!$entity) {
+            if (!$entity) {
                 throw new \Exception('Answer not found');
             }
                 
@@ -229,8 +235,11 @@ class AdminController  extends AbstractActionController {
         $result = $this->processEntityEdit('LwcMultipleChoice\Entity\Answer', $entity);
         $answer = $result['entity'];
         
-        if($result['status'] == 'saved') {                        
-            return $this->redirect()->toRoute(null, array('action' => 'listquestions', 'id'=> $answer->getQuestion()->getTest()->getId()));
+        if ($result['status'] == 'saved') {                        
+            return $this->redirect()->toRoute(
+                null, 
+                array('action' => 'listquestions', 'id'=> $answer->getQuestion()->getTest()->getId())
+            );
             
         } 
         
@@ -257,12 +266,12 @@ class AdminController  extends AbstractActionController {
         
         $id = $this->params('id');
         
-        if($id) {
+        if ($id) {
             $entity = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Question', $id);
         //process new questions     
-        } elseif($new) {
+        } elseif ($new) {
             $testId = $this->getRequest()->getQuery()->get('testId', null);
-            if(!$testId) {
+            if (!$testId) {
                 throw new \Exception('no testid given');
             }            
             $entity = new \LwcMultipleChoice\Entity\Question();
@@ -273,8 +282,11 @@ class AdminController  extends AbstractActionController {
         $result = $this->processEntityEdit('LwcMultipleChoice\Entity\Question', $entity);
         $question = $result['entity'];
         
-        if($result['status'] == 'saved') {                        
-            return $this->redirect()->toRoute(null, array('action' => 'listquestions', 'id'=>$question->getTest()->getId()));
+        if ($result['status'] == 'saved') {                        
+            return $this->redirect()->toRoute(
+                null, 
+                array('action' => 'listquestions', 'id'=>$question->getTest()->getId())
+            );
         } 
         
         $view =  new ViewModel();
@@ -287,7 +299,7 @@ class AdminController  extends AbstractActionController {
     public function deleteanswerAction()
     {
         $id = $this->params('id');        
-        if($id) {
+        if ($id) {
             $answer  = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Answer', $id);
             $testId = $answer->getQuestion()->getTest()->getId();            
             $this->getEntityManager()->remove($answer);
@@ -302,12 +314,13 @@ class AdminController  extends AbstractActionController {
     public function deletequestionAction()
     {
         $id = $this->params('id');
-        if($id) {
-            $question = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Question', $id) ;
+        if ($id) {
+            $question = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Question', $id);
             $testId = $question->getTest()->getId();
-            $answers = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Answer')->findBy(array("question" => $question));            
+            $answers = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Answer')
+                    ->findBy(array("question" => $question));            
             //@TODO Performance: here we create another big performance issue, expect 1000 answers
-            foreach($answers as $answer) {
+            foreach ($answers as $answer) {
                 $this->getEntityManager()->remove($answer);
             }            
             $this->getEntityManager()->remove($question);
@@ -321,15 +334,17 @@ class AdminController  extends AbstractActionController {
     public function deletetestAction()
     {        
         $id = $this->params('id');
-        if($id) {
-            $test = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Test', $id) ;
+        if ($id) {
+            $test = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Test', $id);
            
             //@TODO Performance worse performance here with recursive delete
-            $questions = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Question')->findBy(array("test" => $test));            
+            $questions = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Question')
+                    ->findBy(array("test" => $test));            
             
-            foreach($questions as $question) {
-                $answers = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Answer')->findBy(array("question" => $question));            
-                foreach($answers as $answer) {
+            foreach ($questions as $question) {
+                $answers = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Answer')
+                        ->findBy(array("question" => $question));            
+                foreach ($answers as $answer) {
                     $this->getEntityManager()->remove($answer);
                 }            
             $this->getEntityManager()->remove($question);

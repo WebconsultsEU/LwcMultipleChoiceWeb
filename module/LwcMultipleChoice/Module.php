@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Zend Framework (http://framework.zend.com/)
  *
@@ -28,7 +29,7 @@ class Module
     }
 
     public function getAutoloaderConfig()
-    {        
+    {
         return array(
             'Zend\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
@@ -38,3 +39,4 @@ class Module
         );
     }
 }
+

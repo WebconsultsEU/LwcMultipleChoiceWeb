@@ -1,4 +1,5 @@
 <?php
+
 /**
  * config file für unser LwcMultipleChoice Modul 
  */
