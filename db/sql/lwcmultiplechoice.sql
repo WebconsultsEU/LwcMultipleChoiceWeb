@@ -3,17 +3,11 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 12, 2013 at 04:46 PM
+-- Generation Time: Feb 14, 2013 at 12:57 PM
 -- Server version: 5.1.50
 -- PHP Version: 5.3.14
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
 
 --
 -- Database: `lwcmultiplechoice`
@@ -32,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `answer` (
   `points` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `question_id` (`question_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=40 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=50 ;
 
 -- --------------------------------------------------------
 
@@ -47,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `question` (
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `test_id` (`test_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 -- --------------------------------------------------------
 
@@ -60,8 +54,28 @@ CREATE TABLE IF NOT EXISTS `test` (
   `name` varchar(60) NOT NULL,
   `user_id` int(10) unsigned NOT NULL,
   `created` datetime NOT NULL,
+  `description` varchar(2048) NOT NULL,
+  `teaser` varchar(256) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+CREATE TABLE IF NOT EXISTS `user` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `display_name` varchar(50) DEFAULT NULL,
+  `password` varchar(128) NOT NULL,
+  `state` smallint(6) DEFAULT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --

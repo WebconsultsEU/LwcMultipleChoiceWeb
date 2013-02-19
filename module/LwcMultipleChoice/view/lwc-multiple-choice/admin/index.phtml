@@ -6,10 +6,15 @@
     <ul>            
 <?php foreach($this->tests as $test):
     ?>
-        <li> <h3><?=$test->getName()?>  <a class="btn btn btn-mini" href="<?=$this->url(null, array('action' => 'listquestions', 'id' => $test->getId()))?>">
-                <i class="icon-pencil"></i>Edit</a>                
-            <a class="btn btn btn-mini" href="<?=$this->url(null, array('action' => 'deletetest', 'id' => $test->getId()))?>">
-                <i class="icon-trash"></i>Delete</a></h3> 
+        <li> <h3><?=$test->getName()?></h3>
+                <a class="btn btn btn-mini" href="<?=$this->url(null, array('action' => 'edittest', 'id' => $test->getId()))?>">
+                <i class="icon-pencil"></i>Edit Test</a>
+                <a class="btn btn btn-mini" href="<?=$this->url(null, array('action' => 'listevaluations', 'id' => $test->getId()))?>">
+                <i class="icon-pencil"></i>Edit Evaluations</a>
+                <a class="btn btn btn-mini" href="<?=$this->url(null, array('action' => 'listquestions', 'id' => $test->getId()))?>">
+                <i class="icon-pencil"></i>Edit Questions</a>                
+                <a class="btn btn btn-mini" href="<?=$this->url(null, array('action' => 'deletetest', 'id' => $test->getId()))?>">
+                <i class="icon-trash"></i>Delete</a>
         </li> 
 <?php endforeach; //tests
     ?>

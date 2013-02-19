@@ -23,6 +23,23 @@ class Test
      * @Annotation\Options({"label":"Name:"})
      */
     private $name;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="string", length=2048, nullable=false)
+     * @Annotation\Options({"label":"Description:"})
+     */
+    private $description;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="teaser", type="string", length=256, nullable=false)
+     * @Annotation\Options({"label":"Short Description:"})
+     */
+    private $teaser;
+        
 
     /**
      * @var integer
@@ -135,4 +152,34 @@ class Test
     {
         return $this->id;
     }
+    
+    /**
+     *
+     * @return string
+     */
+    public function getDescription() 
+    {
+        return $this->description;
+    }
+    
+    /**
+     *
+     * @param string $description 
+     */
+    public function setDescription($description) {
+        $this->description = $description;
+    }
+
+    public function getTeaser() 
+    {
+        return $this->teaser;
+    }
+
+    public function setTeaser($teaser) 
+    {
+        $this->teaser = $teaser;
+    }
+
+
+    
 }

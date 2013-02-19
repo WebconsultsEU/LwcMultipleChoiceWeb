@@ -58,11 +58,11 @@ $config->setEntityNamespaces(array('LwcMultipleChoice\Entity'));
 
 //generate EntityManagerInstance
 //For some reason this is needed to generate PHP Classes fom the XML Mappings
-$em = \Doctrine\ORM\EntityManager::create($doctrineConfig, $config);
+//$em = \Doctrine\ORM\EntityManager::create($doctrineConfig, $config);
 
 //For some reason this is needed to generate XML Entities from the database
-//$locator = $application->getServiceManager();
-//$em = $locator->get('doctrine.entitymanager.orm_default');
+$locator = $application->getServiceManager();
+$em = $locator->get('doctrine.entitymanager.orm_default');
 
  
 $helperSet = new \Symfony\Component\Console\Helper\HelperSet(array(

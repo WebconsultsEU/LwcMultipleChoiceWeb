@@ -66,13 +66,16 @@ class TestController  extends AbstractActionController
         
         //process submitted form
         if ($this->getRequest()->isPost()) {
+        
         //bing post data to form 
         $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {                
-                $testResult = $this->processTestResult($form, $test);
-                return $this->testResult($testResult);
-                
+                $testResult = $this->processTestResult($form, $test);                
+                return $this->testResult($testResult);                
+            } else {
+                //form invalid
             }
+            
         }
         
         //@TODO Test Validation        
@@ -87,7 +90,7 @@ class TestController  extends AbstractActionController
     public function testResult($testResult)
     {
         $view = new ViewModel();
-        $view->testResult = $testResult;
+        $view->testResult = $testResult;        
         $view->setTemplate('lwc-multiple-choice/test/testresult.phtml');
         return $view;
     }

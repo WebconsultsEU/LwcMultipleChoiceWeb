@@ -77,6 +77,33 @@ class AdminController  extends AbstractActionController
 
     }
     
+    
+     /**
+     *  List all Evaluation Results
+     */
+    public function listevaluationsAction()
+    {
+         $id = $this->params('id');
+         if ($id) {
+            $test = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Test', $id);
+         } else {
+            throw new \Exceptioon('no id given');
+         }
+        
+        $evaluations = $this->getEntityManager()->getRepository('LwcMultipleChoice\Entity\Evaluation')
+                ->findBy(array('test' => $test));
+        $answers = array();       
+                
+        $view =  new ViewModel();
+        $view->test = $test;
+        $view->evaluations = $evaluations;
+        $view->answers = $answers;
+        
+        
+        return $view;
+
+    }
+    
     /**
      *  Edit the basic test entity 
      *  this could be done by the new editEntity Function but left for historical reasons;
@@ -296,6 +323,50 @@ class AdminController  extends AbstractActionController
         return $view;
     }
     
+     /**
+     * Edit the basic question entity 
+     * 
+     * @Todo make it follow DRY principle
+     * comment: as we notice editquestion is almost the same code than edittest we need to avoid this double usage.
+     * 
+     */
+    public function editevaluationAction()
+    {
+        $entity = null;
+        $new = $this->getRequest()->getQuery()->get('new', null);
+        
+        $id = $this->params('id');
+        
+        if ($id) {
+            $entity = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Evaluation', $id);
+        //process new evaluations   
+        } elseif ($new) {
+            $testId = $this->getRequest()->getQuery()->get('testId', null);
+            if (!$testId) {
+                throw new \Exception('no testid given');
+            }            
+            $entity = new \LwcMultipleChoice\Entity\Evaluation();
+            $entity->setTest($this->getEntityManager()->find('LwcMultipleChoice\Entity\Test', $testId));
+        }
+        
+        
+        $result = $this->processEntityEdit('LwcMultipleChoice\Entity\Evaluation', $entity);
+        $evaluation = $result['entity'];
+        
+        if ($result['status'] == 'saved') {                        
+            return $this->redirect()->toRoute(
+                null, 
+                array('action' => 'listevaluations', 'id'=>$evaluation->getTest()->getId())
+            );
+        } 
+        
+        $view =  new ViewModel();
+        $view->form = $result['form'];
+        $view->evaluation = $evaluation;
+        
+        return $view;
+    }
+    
     public function deleteanswerAction()
     {
         $id = $this->params('id');        
@@ -355,5 +426,17 @@ class AdminController  extends AbstractActionController
         $this->getEntityManager()->flush();
         return $this->redirect()->toRoute(null, array('action' => 'index'));
     }
+    
+    public function deleteevaluationAction()
+    {        
+        $id = $this->params('id');
+        if ($id) {
+            $ebtity = $this->getEntityManager()->find('LwcMultipleChoice\Entity\Evaluation', $id);            
+            $this->getEntityManager()->remove($entity);
+        }
+        $this->getEntityManager()->flush();
+        return $this->redirect()->toRoute(null, array('action' => 'index'));
+    }
+    
     
 }
