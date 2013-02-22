@@ -1,0 +1,16 @@
+{
+  "author": "John Behrens",
+  "name": "LwcMultipleChoice",
+  "description": "Lwc MultipleChoice Modul for Zend Framework ",
+  "version": "0.2.9",
+  "homepage": "https://github.com/WebconsultsEU/LwcMultipleChoice",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WebconsultsEU/LwcMultipleChoice.git"
+  },
+  "main": "/",
+  "engines": {},
+  "dependencies": {},
+  "devDependencies": {},
+  "optionalDependencies": {}
+}
