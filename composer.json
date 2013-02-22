@@ -12,6 +12,6 @@
         "zendframework/zendframework": "2.*",        
         "zf-commons/zfc-user": "dev-master",
         "doctrine/doctrine-orm-module": "dev-master"
-        //"socalnick/scn-social-auth": "dev-master"
+        
     }
 }
