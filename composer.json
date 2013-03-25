@@ -1,5 +1,5 @@
 {
-    "name": "LwcMultipleChoice",
+    "name": "LwcMultipleChoiceWeb",
     "description": "Doctrine demo application",
     "license": "",
     "keywords": [
@@ -7,11 +7,17 @@
         "zf2"
     ],
     "homepage": "http://lewildcode.com/",
+   
+   "repositories": [ {
+            "type": "vcs",
+            "url": "https://github.com/WebconsultsEU/LwcMultipleChoice.git"
+    }],
     "require": {
         "php": ">=5.3.3",
         "zendframework/zendframework": "2.*",        
         "zf-commons/zfc-user": "dev-master",
-        "doctrine/doctrine-orm-module": "dev-master"
+        "doctrine/doctrine-orm-module": "dev-master",
+        "lewildecode/LwcMultipleChoice" : "dev-master"
         
     }
 }
